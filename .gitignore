@@ -1,0 +1,8 @@
+server/node_modules
+client/node_modules
+client/node_modules
+client/dist
+client/stats.json
+client/.DS_Store
+client/# jetbrains
+client/.idea
