@@ -3,13 +3,26 @@ import { Button } from 'components/ui/Button/Button'
 import FormInput from 'components/ui/Form/FormInput'
 import { useFormik } from 'formik'
 import { useState } from 'react'
+import toast from 'react-hot-toast'
 import { Link, useHistory } from 'react-router-dom'
-
+import * as Yup from 'yup'
 import AuthContainer from './AuthContainer'
 
 export default function Register() {
 	const [isLoading, setIsLoading] = useState(false)
 	const history = useHistory()
+	const SignUpSchema = Yup.object().shape({
+		username: Yup.string()
+			.min(2, 'Username should be atleast 2 characters long.')
+			.max(12, "Woah! Username can't be that long.")
+			.required('Username is required.'),
+		email: Yup.string().email('Email must be valid.').required('Email is required.'),
+		password: Yup.string().required('Password is required.'),
+		confirmPassword: Yup.string().when('password', {
+			is: (val) => (val && val.length > 0 ? true : false),
+			then: Yup.string().oneOf([Yup.ref('password')], 'Both password need to be the same'),
+		}),
+	})
 	const formik = useFormik({
 		initialValues: {
 			username: '',
@@ -17,6 +30,7 @@ export default function Register() {
 			password: '',
 			confirmPassword: '',
 		},
+		validationSchema: SignUpSchema,
 		onSubmit: (values) => handleSubmit(values),
 	})
 
@@ -35,13 +49,18 @@ export default function Register() {
 						setIsLoading(false)
 						history.push('/home')
 					}
-					console.log(res)
+					toast.success('Welcome to texthouse!')
 				})
-				.catch((err) => console.log(err.response.data))
+				.catch((err) => {
+					setIsLoading(false)
+					if (err.response.data.code === 'ALREADY_REGISTERED') {
+						toast.error('User with that email is already registered.')
+					} else {
+						toast.error(err.response.data.msg)
+					}
+				})
 		} catch (error) {
 			setIsLoading(false)
-
-			// @TODO -> notify something bad happened
 			console.log(error)
 		}
 	}
@@ -59,6 +78,8 @@ export default function Register() {
 						placeholder="Your username"
 						onChange={formik.handleChange}
 						value={formik.values.username}
+						error={formik.errors.username && formik.errors.username}
+						onBlur={formik.handleBlur}
 					/>
 					<FormInput
 						label="Email Address"
@@ -69,6 +90,8 @@ export default function Register() {
 						placeholder="you@example.com"
 						onChange={formik.handleChange}
 						value={formik.values.email}
+						error={formik.errors.email && formik.errors.email}
+						onBlur={formik.handleBlur}
 					/>
 					<FormInput
 						id="password"
@@ -79,6 +102,8 @@ export default function Register() {
 						placeholder="Password (min 6 characters)"
 						onChange={formik.handleChange}
 						value={formik.values.password}
+						error={formik.errors.password && formik.errors.password}
+						onBlur={formik.handleBlur}
 					/>
 					<FormInput
 						label="Confirm Password"
@@ -89,6 +114,8 @@ export default function Register() {
 						placeholder="Confirm Password"
 						onChange={formik.handleChange}
 						value={formik.values.confirmPassword}
+						error={formik.errors.confirmPassword && formik.errors.confirmPassword}
+						onBlur={formik.handleBlur}
 					/>
 					<div>
 						<Button
