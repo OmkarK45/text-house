@@ -20,9 +20,8 @@ app.use('/api/auth', require('./routes/auth.route'))
 const PORT = process.env.PORT
 
 io.on('connection', (socket) => {
-	socket.on('login', ({}, cb) => {
-		console.log('logged in socket')
-		cb()
+	socket.on('login', ({ name, room }) => {
+		console.log('Logged in')
 	})
 })
 

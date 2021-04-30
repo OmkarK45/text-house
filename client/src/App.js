@@ -1,9 +1,9 @@
-import Foo from './Foo'
+import Login from './Login'
 
 export default function App() {
 	return (
 		<div>
-			<Foo />
+			<Login />
 		</div>
 	)
 }
