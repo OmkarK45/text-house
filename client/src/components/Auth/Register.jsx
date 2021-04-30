@@ -3,13 +3,13 @@ import { Button } from 'components/ui/Button/Button'
 import FormInput from 'components/ui/Form/FormInput'
 import { useFormik } from 'formik'
 import { useState } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useHistory } from 'react-router-dom'
 
 import AuthContainer from './AuthContainer'
 
 export default function Register() {
 	const [isLoading, setIsLoading] = useState(false)
-
+	const history = useHistory()
 	const formik = useFormik({
 		initialValues: {
 			username: '',
@@ -30,9 +30,11 @@ export default function Register() {
 					email,
 					password,
 				})
-				// handle redirection logic
 				.then((res) => {
-					setIsLoading(false)
+					if (res.status === 200) {
+						setIsLoading(false)
+						history.push('/home')
+					}
 					console.log(res)
 				})
 				.catch((err) => console.log(err.response.data))

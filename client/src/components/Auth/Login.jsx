@@ -106,7 +106,7 @@ export default function Login() {
 				</div>
 			</AuthContainer>
 			<div>
-				<p className="text-center text-gray-500">&copy; 2021, DogeFlix</p>
+				<p className="text-center text-gray-500">&copy; 2021, TextHouse</p>
 			</div>
 		</div>
 	)
