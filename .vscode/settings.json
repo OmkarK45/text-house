@@ -1,3 +1,6 @@
 {
-    "typescript.validate.enable": false
+    "eslint.workingDirectories": [
+        "./server",
+        "./client"
+    ]
 }
