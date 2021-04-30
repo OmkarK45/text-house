@@ -1,3 +1,9 @@
+import Foo from './Foo'
+
 export default function App() {
-	return <div>Hi</div>
+	return (
+		<div>
+			<Foo />
+		</div>
+	)
 }

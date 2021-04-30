@@ -1,0 +1,15 @@
+{
+    "compilerOptions": {
+        "baseUrl": ".",
+        "target": "es2015",
+        "module": "commonjs",
+        "jsx":"react",
+        "allowSyntheticDefaultImports": false,
+        "paths": {
+           "components/*" : ["./src/components/*"],
+           "pages/*" : ["./src/pages/*"],
+           "context/*" :["./src/context/*"],
+           "common/*" : ["./src/common"]
+        }
+    }
+}

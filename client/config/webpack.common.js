@@ -1,5 +1,5 @@
 const paths = require('./paths')
-
+const path = require('path')
 const { CleanWebpackPlugin } = require('clean-webpack-plugin')
 const CopyWebpackPlugin = require('copy-webpack-plugin')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
@@ -8,7 +8,16 @@ const MiniCssExtractPlugin = require('mini-css-extract-plugin') // extract css t
 module.exports = {
 	// Where webpack looks to start building the bundle
 	entry: [paths.src + '/index.js'],
-
+	resolve: {
+		alias: {
+			components: path.resolve(__dirname, '../src/components'),
+			utils: path.resolve(__dirname, '../src/utils'),
+			context: path.resolve(__dirname, '../src/context'),
+			pages: path.resolve(__dirname, '../src/pages'),
+			common: path.resolve(__dirname, '../src/common'),
+		},
+		extensions: ['.js', '.jsx'],
+	},
 	// Where webpack outputs the assets and bundles
 	output: {
 		path: paths.build,
@@ -56,9 +65,10 @@ module.exports = {
 			{ test: /\.(js|jsx)$/, exclude: /node_modules/, use: ['babel-loader'] },
 
 			// Styles: Inject CSS into the head with source maps
+			// Note from OK -> nuked minicssextact fro dev.. instead use style-loader
 			{
 				test: /\.(css)$/,
-				use: [MiniCssExtractPlugin.loader, 'css-loader', 'postcss-loader'],
+				use: ['style-loader', 'css-loader', 'postcss-loader'],
 			},
 
 			{
