@@ -40,11 +40,12 @@ export default function Login() {
 				)
 				.then((res) => {
 					// @TODO-> Show Toast on success
+
 					setIsLoading(false)
 					toast.success('Logged in!')
 					console.log(res.data)
 					setAuthState(res.data)
-					history.push('/')
+					history.push('/home')
 				})
 				.catch((error) => {
 					// @TODO -> Show toast on error

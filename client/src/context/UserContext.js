@@ -5,10 +5,10 @@ import { createContext, useContext, useEffect, useState } from 'react'
 const UserContext = createContext()
 
 export function UserProvider({ children }) {
-	const user = localStorage.getItem('user')
-	console.log('from localstorage', JSON.parse(user))
+	const user = JSON.parse(localStorage.getItem('user'))
+	console.log(typeof user)
 	const [authState, setAuthState] = useState({
-		user: user ? JSON.parse(user) : {},
+		user: user,
 		isAuthenticated: false,
 	})
 
@@ -22,8 +22,6 @@ export function UserProvider({ children }) {
 	}
 
 	function logout() {
-		localStorage.removeItem('user')
-		localStorage.removeItem('expiresAt')
 		setAuthState({})
 	}
 	useEffect(() => {
@@ -34,13 +32,14 @@ export function UserProvider({ children }) {
 						withCredentials: true,
 					})
 					.then((res) => {
-						console.log('axios fired')
+						console.log(res)
 						setAuthState({
 							user: res.data.user,
 							isAuthenticated: true,
 						})
 					})
 					.catch((error) => {
+						console.log(error)
 						setAuthState({
 							user: {},
 							isAuthenticated: false,

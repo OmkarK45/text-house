@@ -5,10 +5,10 @@ import App from './App'
 import './index.css'
 
 ReactDOM.render(
-	<SocketProvider>
-		<UserProvider>
+	<UserProvider>
+		<SocketProvider>
 			<App />
-		</UserProvider>
-	</SocketProvider>,
+		</SocketProvider>
+	</UserProvider>,
 	document.getElementById('root'),
 )
