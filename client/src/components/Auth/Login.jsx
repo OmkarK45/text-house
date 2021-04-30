@@ -8,19 +8,24 @@ import { Link, useHistory } from 'react-router-dom'
 import { Button } from './../ui/Button/Button'
 import AuthContainer from './AuthContainer'
 import { useFormik } from 'formik'
+import * as Yup from 'yup'
 
 export default function Login() {
 	const history = useHistory()
-
 	const { setAuthState } = useAuth()
-
 	const [isLoading, setIsLoading] = useState(false)
+
+	const SignInSchema = Yup.object().shape({
+		email: Yup.string().email('Make sure email is valid.').required('Email is required'),
+		password: Yup.string().min(4),
+	})
 
 	const formik = useFormik({
 		initialValues: {
 			email: '',
 			password: '',
 		},
+		validationSchema: SignInSchema,
 		onSubmit: (values) => handleSubmit(values),
 	})
 
@@ -39,22 +44,18 @@ export default function Login() {
 					},
 				)
 				.then((res) => {
-					// @TODO-> Show Toast on success
-
 					setIsLoading(false)
 					toast.success('Logged in!')
-					console.log(res.data)
 					setAuthState(res.data)
 					history.push('/home')
 				})
 				.catch((error) => {
-					// @TODO -> Show toast on error
-					console.log(error.response.data.msg)
 					setIsLoading(false)
 					toast.error(error.response.data.msg)
 					setAuthState(null)
 				})
 		} catch (error) {
+			toast.error('Something went wrong. Please try again.')
 			setIsLoading(false)
 		}
 	}
@@ -73,6 +74,8 @@ export default function Login() {
 						placeholder="you@example.com"
 						onChange={formik.handleChange}
 						value={formik.values.email}
+						error={formik.errors.email && formik.errors.email}
+						onBlur={formik.handleBlur}
 						autoFocus
 					/>
 					<FormInput
@@ -84,6 +87,8 @@ export default function Login() {
 						placeholder="Password"
 						onChange={formik.handleChange}
 						value={formik.values.password}
+						onBlur={formik.handleBlur}
+						error={formik.errors.email && formik.errors.email}
 					/>
 					<div>
 						<Button

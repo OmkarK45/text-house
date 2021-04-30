@@ -61,7 +61,7 @@ export default function Register() {
 				})
 		} catch (error) {
 			setIsLoading(false)
-			console.log(error)
+			toast.error('Something went wrong. Please try after some time.')
 		}
 	}
 	return (
@@ -80,6 +80,7 @@ export default function Register() {
 						value={formik.values.username}
 						error={formik.errors.username && formik.errors.username}
 						onBlur={formik.handleBlur}
+						autoFocus
 					/>
 					<FormInput
 						label="Email Address"
