@@ -105,6 +105,7 @@ function SocketConnection() {
 
 		socket.on('disconnect', () => {
 			console.log('User disconnected')
+
 			const user = deleteUser(socket.id)
 
 			if (user) {
