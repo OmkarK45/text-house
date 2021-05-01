@@ -3,11 +3,9 @@ import { BrowserRouter as Router, Route, Switch } from 'react-router-dom'
 import Register from 'components/Auth/Register'
 import PrivateRoute from 'components/PrivateRoute'
 import { Home } from 'pages/index'
-import { useAuth } from 'context/UserContext'
 import { Toaster } from 'react-hot-toast'
 import Test from 'components/Test'
 import CreateRoom from 'pages/CreateRoomPage'
-
 
 export default function App() {
 	return (
@@ -27,10 +25,9 @@ export default function App() {
 			<Router>
 				<Test />
 				<Switch>
-					<Route exact path="/" render={() => <Home />} />
-					<PrivateRoute exact path="/home">
+					<Route exact path="/">
 						<Home />
-					</PrivateRoute>
+					</Route>
 					<PrivateRoute exact path="/room/create">
 						<CreateRoom />
 					</PrivateRoute>
