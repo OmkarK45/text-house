@@ -17,37 +17,28 @@ const findRoom = async (roomID) => {
 	return { foundRoom, error }
 }
 
-const addUserToRoom = async (socketID, userID, roomID) => {
-	const existingUser = getRoomUsers(roomID).find((user) => user.userID === userID)
-	if (existingUser) return { error: 'You are already in a room. Exit one to join another' }
+const addUserToRoom = async (socketID, username, roomID) => {
+	const usersInRoom = await Room.findOne({ roomID }).populate('users', {
+		username: 1,
+	})
+	console.log(usersInRoom)
+	// @TODO -> work on this
+	const roomUser = { id, name, room }
 
-	const userToBeAdded = { socketID, userID, roomID }
+	users.push(user)
+	return { roomUser }
 }
 
-// const addUser = (id, name, room) => {
-// 	// const existingUser = users.find(
-// 	// 	(user) => user.name.trim().toLowerCase() === name.trim().toLowerCase()
-// 	// )
-// 	// if (existingUser) return { error: 'Username has already been taken' }
-// 	// if (!name && !room) return { error: 'Username and room are required' }
-// 	// if (!name) return { error: 'Username is required' }
-// 	// if (!room) return { error: 'Room is required' }
-// 	// const roomUser = { id, name, room }
-// 	// users.push(user)
-// 	// return { roomUser }
-// }
+const getUser = (id) => {
+	let user = users.find((user) => user.id == id)
+	return user
+}
 
-// const getUser = (id) => {
-// 	// let user = users.find((user) => user.id == id)
-// 	// return user
-// }
+const deleteUser = (id) => {
+	const index = users.findIndex((user) => user.id === id)
+	if (index !== -1) return users.splice(index, 1)[0]
+}
 
-// const deleteUser = (id) => {
-// 	// const index = users.findIndex((user) => user.id === id)
-// 	// if (index !== -1) return users.splice(index, 1)[0]
-// }
+const getUsers = (room) => users.filter((user) => user.room === room)
 
-// // const getUsers = (room) => users.filter((user) => user.room === room)
-
-// module.exports = { addUser, getUser, deleteUser, getUsers, getRoomUsers }
-module.exports = { getRoomUsers, findRoom }
+module.exports = { getRoomUsers, findRoom, getUser, deleteUser, getUsers, getRoomUsers }

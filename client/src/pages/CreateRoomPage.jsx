@@ -41,9 +41,8 @@ export default function CreateRoom() {
 			},
 			(response) => {
 				if (response) {
-					console.log('error', response)
+					console.log('response', response)
 				}
-				console.log('created')
 			},
 		)
 		history.push('/home')
