@@ -2,8 +2,6 @@ import Login from './components/Auth/Login'
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom'
 import Register from 'components/Auth/Register'
 import PrivateRoute from 'components/PrivateRoute'
-// eslint-disable-next-line no-unused-vars
-import { useAuth } from 'context/UserContext'
 import { Home } from 'pages/index'
 
 export default function App() {
