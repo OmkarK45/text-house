@@ -10,7 +10,14 @@ const corsOptions = require('./utils/corsOptions')
 connectDB()
 const { checkAuth } = require('./middlewares/checkAuth')
 const io = require('socket.io')(http)
-const { addUser, getUser, deleteUser, getUsers } = require('./utils/users')
+const {
+	addUser,
+	getUser,
+	deleteUser,
+	getUsers,
+	findRoom,
+	getRoomUsers,
+} = require('./controllers/users')
 const Room = require('./models/Room')
 
 app.use(cors(corsOptions))
@@ -25,6 +32,8 @@ function SocketConnection() {
 	io.on('connection', (socket) => {
 		socket.on('CREATE_ROOM', ({ user, room }, callback) => {
 			// create logic to create room with unique ID
+
+			// MOve this to join room invoker
 			// const { roomUser, error } = addUser(socket.id, user, room)
 
 			const newRoom = new Room({
@@ -38,7 +47,7 @@ function SocketConnection() {
 			}
 
 			makeRoom()
-			console.log(newRoom, user)
+			// console.log(newRoom, user)
 
 			// if (error) return callback(error)
 
@@ -53,22 +62,53 @@ function SocketConnection() {
 			callback()
 		})
 
+		socket.on('JOIN_ROOM', ({ user, roomID }, callback) => {
+			function addUserToRoom() {
+				// const { foundRoom, error } = findRoom(roomID)
+				Room.findOne({ roomID })
+					.populate('users')
+					.exec((error, foundRoom) => {
+						console.log('Room Found', foundRoom)
+						if (error) {
+							return callback(error)
+						}
+						foundRoom.users.push(user.userID)
+
+						foundRoom.save()
+
+						socket.join(foundRoom.roomID)
+
+						socket.in(foundRoom.roomID).emit('USER_JOINED', {
+							info: `${user.username} has joined the room.`,
+						})
+
+						io.in(foundRoom.roomID).emit('JOINED_ROOM', {
+							usersInRoom: foundRoom.users,
+						})
+
+						callback({ error: error })
+					})
+			}
+			addUserToRoom()
+		})
+
 		socket.on('sendMessage', (message) => {
-			const user = getUser(socket.id)
-			console.log(socket.id)
-			io.in(user.room).emit('message', { user: user.name, text: message })
+			console.log('sendMessage triggered')
+			// const user = getUser(socket.id)
+			// console.log(socket.id)
+			// io.in(user.room).emit('message', { user: user.name, text: message })
 		})
 
 		socket.on('disconnect', () => {
 			console.log('User disconnected')
-			const user = deleteUser(socket.id)
-			if (user) {
-				io.in(user.room).emit('notification', {
-					title: 'Someone just left',
-					description: `${user.name} just left the room`,
-				})
-				io.in(user.room).emit('users', getUsers(user.room))
-			}
+			// const user = deleteUser(socket.id)
+			// if (user) {
+			// 	io.in(user.room).emit('notification', {
+			// 		title: 'Someone just left',
+			// 		description: `${user.name} just left the room`,
+			// 	})
+			// 	io.in(user.room).emit('users', getUsers(user.room))
+			// }
 		})
 	})
 }
