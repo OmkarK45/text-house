@@ -11,6 +11,9 @@ import { useHistory } from 'react-router-dom'
 export default function CreateRoom() {
 	const history = useHistory()
 	const socket = useSocket()
+	const { setMembers } = useMembers()
+	const { authState } = useAuth()
+
 	const formik = useFormik({
 		initialValues: {
 			title: '',
@@ -18,25 +21,28 @@ export default function CreateRoom() {
 		},
 		onSubmit: (values) => console.log(values),
 	})
-	const { setMembers } = useMembers()
 
 	useEffect(() => {
 		socket.on('users', (users) => {
+			console.log(socket.id)
 			setMembers(users)
 		})
 	})
 
-	const { authState } = useAuth()
-
 	const handleClick = () => {
 		socket.emit(
-			'login',
-			{ name: authState.user?.username, room: formik.values.title },
-			(error) => {
-				if (error) {
-					console.log('error', error)
+			'CREATE_ROOM',
+			{
+				user: authState.user,
+				room: {
+					roomName: formik.values.title,
+					roomTopic: formik.values.topic,
+				},
+			},
+			(response) => {
+				if (response) {
+					console.log('response', response)
 				}
-				console.log('created')
 			},
 		)
 		history.push('/home')

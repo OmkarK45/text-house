@@ -38,6 +38,9 @@ const userSchema = new Schema({
 		default: 'MEMBER',
 		enum: ['ADMIN', 'MEMBER', 'MODERATOR'],
 	},
+	socketID: {
+		type: String,
+	},
 })
 
 // Hash password before you save the user

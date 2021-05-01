@@ -6,6 +6,8 @@ import { Home } from 'pages/index'
 import { Toaster } from 'react-hot-toast'
 import Test from 'components/Test'
 import CreateRoom from 'pages/CreateRoomPage'
+import JoinRoom from 'pages/JoinRoomPage'
+
 
 export default function App() {
 	return (
@@ -31,8 +33,15 @@ export default function App() {
 					<PrivateRoute exact path="/room/create">
 						<CreateRoom />
 					</PrivateRoute>
-					<Route exact path="/auth/login" render={() => <Login />} />
-					<Route exact path="/auth/register" render={() => <Register />} />
+					<PrivateRoute exact path="/room/join">
+						<JoinRoom />
+					</PrivateRoute>
+					<Route exact path="/auth/login">
+						<Login />
+					</Route>
+					<Route exact path="/auth/register">
+						<Register />
+					</Route>
 				</Switch>
 			</Router>
 		</>
