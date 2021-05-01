@@ -11,6 +11,7 @@ connectDB()
 const { checkAuth } = require('./middlewares/checkAuth')
 const io = require('socket.io')(http)
 const { addUser, getUser, deleteUser, getUsers } = require('./utils/users')
+const Room = require('./models/Room')
 
 app.use(cors(corsOptions))
 app.use(cookieParser())
@@ -20,39 +21,59 @@ app.use('/api/auth', require('./routes/auth.route'))
 
 const PORT = process.env.PORT
 
-io.on('connection', (socket) => {
-	socket.on('login', ({ name, room }, callback) => {
-		const { user, error } = addUser(socket.id, name, room)
-		console.log(user)
-		if (error) return callback(error)
-		socket.join(user.room)
-		socket.in(room).emit('notification', {
-			title: "Someone's here",
-			description: `${user.name} just entered the room`,
-		})
-		io.in(room).emit('users', getUsers(room))
-		callback()
-	})
+function SocketConnection() {
+	io.on('connection', (socket) => {
+		socket.on('CREATE_ROOM', ({ user, room }, callback) => {
+			// create logic to create room with unique ID
+			// const { roomUser, error } = addUser(socket.id, user, room)
 
-	socket.on('sendMessage', (message) => {
-		const user = getUser(socket.id)
-		console.log(socket.id)
-		io.in(user.room).emit('message', { user: user.name, text: message })
-	})
-
-	socket.on('disconnect', () => {
-		console.log('User disconnected')
-		const user = deleteUser(socket.id)
-		if (user) {
-			io.in(user.room).emit('notification', {
-				title: 'Someone just left',
-				description: `${user.name} just left the room`,
+			const newRoom = new Room({
+				roomName: room.roomName,
+				roomTopic: room.roomTopic,
+				creator: user._id,
 			})
-			io.in(user.room).emit('users', getUsers(user.room))
-		}
-	})
-})
 
+			async function makeRoom() {
+				await newRoom.save()
+			}
+
+			makeRoom()
+			console.log(newRoom, user)
+
+			// if (error) return callback(error)
+
+			// socket.join(roomUser.room)
+
+			// socket.in(room).emit('notification', {
+			// 	title: "Someone's here",
+			// 	description: `${roomUser.name} just entered the room`,
+			// })
+
+			// io.in(room).emit('users', getUsers(room))
+			callback()
+		})
+
+		socket.on('sendMessage', (message) => {
+			const user = getUser(socket.id)
+			console.log(socket.id)
+			io.in(user.room).emit('message', { user: user.name, text: message })
+		})
+
+		socket.on('disconnect', () => {
+			console.log('User disconnected')
+			const user = deleteUser(socket.id)
+			if (user) {
+				io.in(user.room).emit('notification', {
+					title: 'Someone just left',
+					description: `${user.name} just left the room`,
+				})
+				io.in(user.room).emit('users', getUsers(user.room))
+			}
+		})
+	})
+}
+
+SocketConnection()
 app.get('/', (req, res) => {
 	res.status(200).json({
 		msg: 'Hello from server',

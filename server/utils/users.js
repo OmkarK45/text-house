@@ -10,9 +10,9 @@ const addUser = (id, name, room) => {
 	if (!name) return { error: 'Username is required' }
 	if (!room) return { error: 'Room is required' }
 
-	const user = { id, name, room }
+	const roomUser = { id, name, room }
 	users.push(user)
-	return { user }
+	return { roomUser }
 }
 
 const getUser = (id) => {

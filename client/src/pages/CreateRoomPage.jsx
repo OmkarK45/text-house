@@ -30,8 +30,14 @@ export default function CreateRoom() {
 
 	const handleClick = () => {
 		socket.emit(
-			'login',
-			{ name: authState.user?.username, room: formik.values.title },
+			'CREATE_ROOM',
+			{
+				user: authState.user,
+				room: {
+					roomName: formik.values.title,
+					roomTopic: formik.values.topic,
+				},
+			},
 			(error) => {
 				if (error) {
 					console.log('error', error)
