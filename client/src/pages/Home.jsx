@@ -1,13 +1,9 @@
 import { Fragment } from 'react'
 import { Popover, Transition } from '@headlessui/react'
 import { RiMenuFill, RiCloseFill } from 'react-icons/ri'
+import { Link } from 'react-router-dom'
 
-const navigation = [
-	{ name: 'Mediate', href: '#' },
-	{ name: 'Features', href: '#' },
-]
-
-export default function Example() {
+export default function Home() {
 	return (
 		<Popover className="relative overflow-hidden bg-white">
 			{({ open }) => (
@@ -26,7 +22,7 @@ export default function Example() {
 
 							<div className="relative px-4 pt-6 sm:px-6 lg:px-8">
 								<nav
-									className="relative flex items-center justify-between sm:h-10 lg:justify-start"
+									className="relative flex items-center justify-between sm:h-10 lg:justify-between "
 									aria-label="Global"
 								>
 									<div className="flex items-center flex-grow flex-shrink-0 lg:flex-grow-0">
@@ -48,21 +44,12 @@ export default function Example() {
 										</div>
 									</div>
 									<div className="hidden md:block md:ml-10 md:pr-4 md:space-x-8">
-										{navigation.map((item) => (
-											<a
-												key={item.name}
-												href={item.href}
-												className="font-medium text-gray-500 hover:text-gray-900"
-											>
-												{item.name}
-											</a>
-										))}
-										<a
-											href="#"
+										<Link
+											to="/auth/login"
 											className="font-medium text-cyan-600 hover:text-cyan-500"
 										>
 											Log in
-										</a>
+										</Link>
 									</div>
 								</nav>
 							</div>
@@ -100,23 +87,12 @@ export default function Example() {
 												</Popover.Button>
 											</div>
 										</div>
-										<div className="px-2 pt-2 pb-3 space-y-1">
-											{navigation.map((item) => (
-												<a
-													key={item.name}
-													href={item.href}
-													className="block px-3 py-2 text-base font-medium text-gray-700 rounded-md hover:text-gray-900 hover:bg-gray-50"
-												>
-													{item.name}
-												</a>
-											))}
-										</div>
-										<a
-											href="#"
+										<Link
+											to="/auth/login"
 											className="block w-full px-5 py-3 font-medium text-center text-cyan-600 bg-gray-50 hover:bg-gray-100"
 										>
 											Log in
-										</a>
+										</Link>
 									</div>
 								</Popover.Panel>
 							</Transition>
@@ -134,12 +110,12 @@ export default function Example() {
 									</p>
 									<div className="mt-5 sm:mt-8 sm:flex sm:justify-center lg:justify-start">
 										<div className="rounded-md shadow">
-											<a
-												href="#"
+											<Link
+												to="/auth/register"
 												className="flex items-center justify-center w-full px-8 py-3 text-base font-medium text-white border border-transparent rounded-md bg-cyan-600 hover:bg-cyan-700 md:py-4 md:text-lg md:px-10"
 											>
 												Sign Up
-											</a>
+											</Link>
 										</div>
 										<div className="mt-3 sm:mt-0 sm:ml-3">
 											<a

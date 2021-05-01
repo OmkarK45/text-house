@@ -3,11 +3,11 @@ import { BrowserRouter as Router, Route, Switch } from 'react-router-dom'
 import Register from 'components/Auth/Register'
 import PrivateRoute from 'components/PrivateRoute'
 import { Home } from 'pages/index'
-// import { useAuth } from 'context/UserContext'
 import { Toaster } from 'react-hot-toast'
 import Test from 'components/Test'
 import CreateRoom from 'pages/CreateRoomPage'
 import JoinRoom from 'pages/JoinRoomPage'
+
 
 export default function App() {
 	return (
