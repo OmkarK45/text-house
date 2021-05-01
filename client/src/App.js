@@ -1,36 +1,21 @@
 import Login from './components/Auth/Login'
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom'
 import Register from 'components/Auth/Register'
-import PrivateRoute from 'components/PrivateRoute'
-import { useAuth } from 'context/UserContext'
-import { Toaster } from 'react-hot-toast'
-import Test from 'components/Test'
-function Home() {
-	const { authState } = useAuth()
-	return <h1>{JSON.stringify(authState.user)}</h1>
-}
+// import PrivateRoute from 'components/PrivateRoute'
+// import { useAuth } from 'context/UserContext'
+// import { Toaster } from 'react-hot-toast'
+// import Test from 'components/Test'
+import { Home } from 'pages/index'
 
 export default function App() {
 	return (
 		<>
-			<Toaster
-				position="bottom-center"
-				reverseOrder={false}
-				toastOptions={{
-					className: 'bg-gray-800 text-white',
-					success: {
-						iconTheme: {
-							primary: '#059669',
-						},
-					},
-				}}
-			/>
-			<Test />
 			<Router>
 				<Switch>
-					<PrivateRoute exact path="/home">
+					<Route exact path="/" render={() => <Home />} />
+					{/* <PrivateRoute exact path="/home">
 						<Home />
-					</PrivateRoute>
+					</PrivateRoute> */}
 					<Route exact path="/auth/login" render={() => <Login />} />
 					<Route exact path="/auth/register" render={() => <Register />} />
 				</Switch>
