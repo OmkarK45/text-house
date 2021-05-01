@@ -34,7 +34,8 @@ export default function Test() {
 				<input type="text" value={message} onChange={(e) => setMessage(e.target.value)} />
 				<button onClick={handleMessageSend}>Send</button>
 			</div>
-			<Link to="/room/create">Join Room</Link>
+			<Link to="/room/join">Join Room</Link>
+			<Link to="/room/create">Create Room</Link>
 		</div>
 	)
 }

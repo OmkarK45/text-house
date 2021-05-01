@@ -43,6 +43,7 @@ function SocketConnection() {
 				await newRoom.save()
 			}
 			const { user: newUser, error } = addUserToRoom(socket.id, user.username, newRoom.roomID)
+			console.log(newUser, error)
 			socket.join(newRoom.roomID)
 			makeRoom()
 
@@ -74,7 +75,7 @@ function SocketConnection() {
 							if (!foundRoom.users.find((u) => u._id == user.userID)) {
 								foundRoom.users.push(user.userID)
 								foundRoom.save()
-
+								console.log('FoundRoom.roodID', foundRoom.roomID)
 								socket.join(foundRoom.roomID)
 
 								socket.in(foundRoom.roomID).emit('USER_JOINED', {
@@ -96,11 +97,13 @@ function SocketConnection() {
 		})
 
 		socket.on('sendMessage', (message) => {
-			console.log('sendMessage triggered')
-			const user = getUser(socket.id)
-			console.log('User from socket id', user)
+			console.log('sendMessage triggered', socket.id)
 
-			io.in(roomID).emit('message', { user: user.username, text: message })
+			// const user = getUser(socket.id)
+
+			// console.log('User from socket id', user)
+
+			// io.in(roomID).emit('message', { user: user.username, text: message })
 		})
 
 		socket.on('disconnect', () => {
