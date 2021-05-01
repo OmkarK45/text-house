@@ -101,7 +101,6 @@ exports.login = async (req, res, next) => {
 
 		sendCookie(user, 200, 'Logged in successfully!', 'LOGIN_SUCCESS', res)
 	} catch (error) {
-		console.log(error)
 		res.status(500).json({
 			success: false,
 			msg: error,

@@ -3,6 +3,7 @@ import { useRoom } from 'context/RoomContext'
 import { useState, useEffect, useRef } from 'react'
 import { useSocket } from 'context/SocketContext'
 import { useMembers } from 'context/MemberContext'
+import { Link } from 'react-router-dom'
 
 export default function Test() {
 	const { user, room, setUser, setRoom } = useRoom()
@@ -10,11 +11,13 @@ export default function Test() {
 	const { members } = useMembers()
 	const [messages, setMessages] = useState([])
 	const [message, setMessage] = useState('')
+
 	useEffect(() => {
 		socket.on('message', (msg) => {
-			setMessages([...messages, msg])
+			setMessages((messages) => [...messages, msg])
 		})
-	}, [socket, messages])
+		// will add notification here
+	}, [socket])
 
 	function handleMessageSend() {
 		socket.emit('sendMessage', message, () => setMessage(''))
@@ -31,6 +34,7 @@ export default function Test() {
 				<input type="text" value={message} onChange={(e) => setMessage(e.target.value)} />
 				<button onClick={handleMessageSend}>Send</button>
 			</div>
+			<Link to="/room/create">Join Room</Link>
 		</div>
 	)
 }
