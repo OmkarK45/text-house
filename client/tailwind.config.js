@@ -14,6 +14,8 @@ module.exports = {
 				accent: '#fd4d4d',
 				'accent-hover': '#fd6868',
 				'accent-disabled': '#f5bfbf',
+				teal: colors.teal,
+				cyan: colors.cyan,
 			},
 		},
 	},
