@@ -1,10 +1,9 @@
 import Login from './components/Auth/Login'
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom'
 import Register from 'components/Auth/Register'
-// import PrivateRoute from 'components/PrivateRoute'
-// import { useAuth } from 'context/UserContext'
-// import { Toaster } from 'react-hot-toast'
-// import Test from 'components/Test'
+import PrivateRoute from 'components/PrivateRoute'
+// eslint-disable-next-line no-unused-vars
+import { useAuth } from 'context/UserContext'
 import { Home } from 'pages/index'
 
 export default function App() {
@@ -13,9 +12,9 @@ export default function App() {
 			<Router>
 				<Switch>
 					<Route exact path="/" render={() => <Home />} />
-					{/* <PrivateRoute exact path="/home">
+					<PrivateRoute exact path="/home">
 						<Home />
-					</PrivateRoute> */}
+					</PrivateRoute>
 					<Route exact path="/auth/login" render={() => <Login />} />
 					<Route exact path="/auth/register" render={() => <Register />} />
 				</Switch>
