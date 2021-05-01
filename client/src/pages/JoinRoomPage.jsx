@@ -9,6 +9,7 @@ import toast from 'react-hot-toast'
 export default function JoinRoom() {
 	const socket = useSocket()
 	const { authState } = useAuth()
+
 	const formik = useFormik({
 		initialValues: {
 			roomID: '',
@@ -27,11 +28,10 @@ export default function JoinRoom() {
 		socket.emit(
 			'JOIN_ROOM',
 			{ user: authState.user, roomID: formik.values.roomID },
-			(error) => {
-				if (error) {
-					console.log('error', error)
+			(response) => {
+				if (response) {
+					console.log('response', response)
 				}
-				console.log('created')
 			},
 		)
 	}

@@ -1,5 +1,8 @@
 const Room = require('../models/Room')
 
+// @omkar_k45 : This is temporary storage of users for that socket instance. It will have users with socket IDs
+const users = []
+
 const getRoomUsers = async (roomID) => {
 	const roomUsers = await Room.findOne({ roomID }).populate('users')
 	return roomUsers
@@ -12,6 +15,13 @@ const findRoom = async (roomID) => {
 		error.error = 'No Room with given ID was found.'
 	}
 	return { foundRoom, error }
+}
+
+const addUserToRoom = async (socketID, userID, roomID) => {
+	const existingUser = getRoomUsers(roomID).find((user) => user.userID === userID)
+	if (existingUser) return { error: 'You are already in a room. Exit one to join another' }
+
+	const userToBeAdded = { socketID, userID, roomID }
 }
 
 // const addUser = (id, name, room) => {

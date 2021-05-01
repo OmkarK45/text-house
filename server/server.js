@@ -31,11 +31,7 @@ const PORT = process.env.PORT
 function SocketConnection() {
 	io.on('connection', (socket) => {
 		socket.on('CREATE_ROOM', ({ user, room }, callback) => {
-			// create logic to create room with unique ID
-
-			// MOve this to join room invoker
-			// const { roomUser, error } = addUser(socket.id, user, room)
-
+			console.log('UserReceived', user)
 			const newRoom = new Room({
 				roomName: room.roomName,
 				roomTopic: room.roomTopic,
@@ -47,46 +43,45 @@ function SocketConnection() {
 			}
 
 			makeRoom()
-			// console.log(newRoom, user)
 
-			// if (error) return callback(error)
+			callback({
+				msg: 'Room has been created.',
+				roomID: newRoom.roomID,
+			})
 
-			// socket.join(roomUser.room)
-
-			// socket.in(room).emit('notification', {
-			// 	title: "Someone's here",
-			// 	description: `${roomUser.name} just entered the room`,
-			// })
-
-			// io.in(room).emit('users', getUsers(room))
-			callback()
+			io.in(newRoom.roomID).emit('JOINED_ROOM', {
+				usersInRoom: user,
+			})
 		})
 
 		socket.on('JOIN_ROOM', ({ user, roomID }, callback) => {
 			function addUserToRoom() {
-				// const { foundRoom, error } = findRoom(roomID)
 				Room.findOne({ roomID })
-					.populate('users')
+					.populate('users', {
+						email: 1,
+						username: 1,
+						roles: 1,
+					})
 					.exec((error, foundRoom) => {
-						console.log('Room Found', foundRoom)
-						if (error) {
-							return callback(error)
+						console.log('Room Found', foundRoom, error)
+
+						if (foundRoom) {
+							foundRoom.users.push(user.userID)
+
+							foundRoom.save()
+
+							socket.join(foundRoom.roomID)
+
+							socket.in(foundRoom.roomID).emit('USER_JOINED', {
+								info: `${user.username} has joined the room.`,
+							})
+
+							io.in(foundRoom.roomID).emit('JOINED_ROOM', {
+								usersInRoom: foundRoom.users,
+							})
+						} else {
+							callback({ error: 'Room was not found' })
 						}
-						foundRoom.users.push(user.userID)
-
-						foundRoom.save()
-
-						socket.join(foundRoom.roomID)
-
-						socket.in(foundRoom.roomID).emit('USER_JOINED', {
-							info: `${user.username} has joined the room.`,
-						})
-
-						io.in(foundRoom.roomID).emit('JOINED_ROOM', {
-							usersInRoom: foundRoom.users,
-						})
-
-						callback({ error: error })
 					})
 			}
 			addUserToRoom()
