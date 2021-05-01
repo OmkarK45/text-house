@@ -134,7 +134,7 @@ export default function Example() {
 									<p className="mt-3 text-base text-gray-500 sm:mt-5 sm:text-lg sm:max-w-xl sm:mx-auto md:mt-5 md:text-xl lg:mx-0">
 										An invite-only place with plenty of room to chat about the
 										topics which are on your mind. Grab a seat and watch the
-										explode with conversations.
+										room explode with conversations.
 									</p>
 									<div className="mt-5 sm:mt-8 sm:flex sm:justify-center lg:justify-start">
 										<div className="rounded-md shadow">
