@@ -10,6 +10,7 @@ const corsOptions = require('./utils/corsOptions')
 connectDB()
 const { checkAuth } = require('./middlewares/checkAuth')
 const io = require('socket.io')(http)
+const { addUser, getUser, deleteUser, getUsers } = require('./utils/users')
 
 app.use(cors(corsOptions))
 app.use(cookieParser())
@@ -19,30 +20,36 @@ app.use('/api/auth', require('./routes/auth.route'))
 
 const PORT = process.env.PORT
 
-let users = []
-let messages = {
-	test_room: [],
-}
 io.on('connection', (socket) => {
-	socket.on('join room', (user, roomName, cb) => {
-		const newUser = {
-			username: user,
-			id: socket.id,
-		}
-		users.push(newUser)
-		io.emit('new user', users)
-		socket.join(roomName)
-		cb(messages[roomName])
-	})
-
-	socket.on('disconnect', () => {
-		users = users.filter((user) => user.id !== socket.id)
-		// @TODO -> change this to user left
-		io.emit('new user', users)
+	socket.on('login', ({ name, room }, callback) => {
+		const { user, error } = addUser(socket.id, name, room)
+		console.log(user)
+		if (error) return callback(error)
+		socket.join(user.room)
+		socket.in(room).emit('notification', {
+			title: "Someone's here",
+			description: `${user.name} just entered the room`,
+		})
+		io.in(room).emit('users', getUsers(room))
+		callback()
 	})
 
 	socket.on('sendMessage', (message) => {
-		io.emit('message', { message })
+		const user = getUser(socket.id)
+		console.log(socket.id)
+		io.in(user.room).emit('message', { user: user.name, text: message })
+	})
+
+	socket.on('disconnect', () => {
+		console.log('User disconnected')
+		const user = deleteUser(socket.id)
+		if (user) {
+			io.in(user.room).emit('notification', {
+				title: 'Someone just left',
+				description: `${user.name} just left the room`,
+			})
+			io.in(user.room).emit('users', getUsers(user.room))
+		}
 	})
 })
 
