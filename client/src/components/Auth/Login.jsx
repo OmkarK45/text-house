@@ -17,7 +17,7 @@ export default function Login() {
 
 	const SignInSchema = Yup.object().shape({
 		email: Yup.string().email('Make sure email is valid.').required('Email is required'),
-		password: Yup.string().min(4),
+		password: Yup.string().min(4).required('Password is required.'),
 	})
 
 	const formik = useFormik({
@@ -31,33 +31,32 @@ export default function Login() {
 
 	const handleSubmit = async (values) => {
 		setIsLoading(true)
-		try {
-			await axios
-				.post(
-					'http://localhost:5000/api/auth/login',
-					{
-						email: values.email,
-						password: values.password,
-					},
-					{
-						withCredentials: true,
-					},
-				)
-				.then((res) => {
+
+		await axios
+			.post(
+				'http://localhost:5000/api/auth/login',
+				{
+					email: values.email,
+					password: values.password,
+				},
+				{
+					withCredentials: true,
+				},
+			)
+			.then((res) => {
+				setIsLoading(false)
+				toast.success('Logged in!')
+				setAuthState(res.data)
+				history.push('/home')
+			})
+			.catch((error) => {
+				console.log(error.response.status)
+				if (error.response.status === 404) {
+					toast.error('No account found with these credentials.')
 					setIsLoading(false)
-					toast.success('Logged in!')
-					setAuthState(res.data)
-					history.push('/home')
-				})
-				.catch((error) => {
-					setIsLoading(false)
-					toast.error(error.response.data.msg)
 					setAuthState(null)
-				})
-		} catch (error) {
-			toast.error('Something went wrong. Please try again.')
-			setIsLoading(false)
-		}
+				}
+			})
 	}
 
 	return (
@@ -88,7 +87,7 @@ export default function Login() {
 						onChange={formik.handleChange}
 						value={formik.values.password}
 						onBlur={formik.handleBlur}
-						error={formik.errors.email && formik.errors.email}
+						error={formik.errors.password && formik.errors.password}
 					/>
 					<div>
 						<Button

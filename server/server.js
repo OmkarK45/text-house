@@ -19,9 +19,30 @@ app.use('/api/auth', require('./routes/auth.route'))
 
 const PORT = process.env.PORT
 
+let users = []
+let messages = {
+	test_room: [],
+}
 io.on('connection', (socket) => {
-	socket.on('login', ({ name, room }) => {
-		console.log('Logged in')
+	socket.on('join room', (user, roomName, cb) => {
+		const newUser = {
+			username: user,
+			id: socket.id,
+		}
+		users.push(newUser)
+		io.emit('new user', users)
+		socket.join(roomName)
+		cb(messages[roomName])
+	})
+
+	socket.on('disconnect', () => {
+		users = users.filter((user) => user.id !== socket.id)
+		// @TODO -> change this to user left
+		io.emit('new user', users)
+	})
+
+	socket.on('sendMessage', (message) => {
+		io.emit('message', { message })
 	})
 })
 

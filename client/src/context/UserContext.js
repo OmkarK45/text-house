@@ -13,12 +13,16 @@ export function UserProvider({ children }) {
 	})
 
 	function setAuth({ user }) {
-		localStorage.setItem('user', JSON.stringify(user))
+		try {
+			localStorage.setItem('user', JSON.stringify(user))
 
-		setAuthState({
-			user,
-			isAuthenticated: user && user.userID ? true : false,
-		})
+			setAuthState({
+				user,
+				isAuthenticated: user && user.userID ? true : false,
+			})
+		} catch (err) {
+			return
+		}
 	}
 
 	function logout() {

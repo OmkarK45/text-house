@@ -83,7 +83,7 @@ exports.login = async (req, res, next) => {
 		const user = await User.findOne({ email })
 
 		if (!user) {
-			return res.staus(404).json({
+			return res.status(404).json({
 				success: false,
 				msg: 'No user with that email was found',
 				code: 'USER_NOT_FOUND',
@@ -101,6 +101,7 @@ exports.login = async (req, res, next) => {
 
 		sendCookie(user, 200, 'Logged in successfully!', 'LOGIN_SUCCESS', res)
 	} catch (error) {
+		console.log(error)
 		res.status(500).json({
 			success: false,
 			msg: error,

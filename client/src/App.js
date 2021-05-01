@@ -4,6 +4,7 @@ import Register from 'components/Auth/Register'
 import PrivateRoute from 'components/PrivateRoute'
 import { useAuth } from 'context/UserContext'
 import { Toaster } from 'react-hot-toast'
+import Test from 'components/Test'
 function Home() {
 	const { authState } = useAuth()
 	return <h1>{JSON.stringify(authState.user)}</h1>
@@ -13,7 +14,7 @@ export default function App() {
 	return (
 		<>
 			<Toaster
-				position="bottom-right"
+				position="bottom-center"
 				reverseOrder={false}
 				toastOptions={{
 					className: 'bg-gray-800 text-white',
@@ -24,6 +25,7 @@ export default function App() {
 					},
 				}}
 			/>
+			<Test />
 			<Router>
 				<Switch>
 					<PrivateRoute exact path="/home">
