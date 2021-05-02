@@ -1,32 +1,13 @@
-const Room = require('../models/Room')
-
-// @omkar_k45 : This is temporary storage of users for that socket instance. It will have users with socket IDs
 const users = []
 
-const getRoomUsers = async (roomID) => {
-	const roomUsers = await Room.findOne({ roomID }).populate('users')
-	return roomUsers
-}
+const addUser = (id, userID, roomID) => {
+	const existingUser = users.find((user) => user.userID == userID)
 
-const findRoom = async (roomID) => {
-	const foundRoom = await Room.findOne({ roomID })
-	const error = {}
-	if (!foundRoom) {
-		error.error = 'No Room with given ID was found.'
-	}
-	return { foundRoom, error }
-}
+	if (existingUser) return { error: 'Username has already been taken' }
 
-const addUserToRoom = async (socketID, username, roomID) => {
-	const usersInRoom = await Room.findOne({ roomID }).populate('users', {
-		username: 1,
-	})
-	console.log(usersInRoom)
-	// @TODO -> work on this
-	const roomUser = { id, name, room }
-
+	const user = { id, userID, roomID }
 	users.push(user)
-	return { roomUser }
+	return { user }
 }
 
 const getUser = (id) => {
@@ -39,6 +20,6 @@ const deleteUser = (id) => {
 	if (index !== -1) return users.splice(index, 1)[0]
 }
 
-const getUsers = (room) => users.filter((user) => user.room === room)
+const getUsers = (roomID) => users.filter((user) => user.roomID === roomID)
 
-module.exports = { getRoomUsers, findRoom, getUser, deleteUser, getUsers, getRoomUsers }
+module.exports = { addUser, getUser, deleteUser, getUsers }

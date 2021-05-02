@@ -23,6 +23,7 @@ export default function Test() {
 		socket.emit('sendMessage', message, () => setMessage(''))
 		setMessage('')
 	}
+	console.log('MESSAGES IN ROOM', messages)
 	return (
 		<div>
 			{messages.length > 0 &&
@@ -34,7 +35,8 @@ export default function Test() {
 				<input type="text" value={message} onChange={(e) => setMessage(e.target.value)} />
 				<button onClick={handleMessageSend}>Send</button>
 			</div>
-			<Link to="/room/create">Join Room</Link>
+			<Link to="/room/join">Join Room</Link>
+			<Link to="/room/create">Create Room</Link>
 		</div>
 	)
 }

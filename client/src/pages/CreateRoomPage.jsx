@@ -7,6 +7,7 @@ import { useMembers } from 'context/MemberContext'
 import { useAuth } from 'context/UserContext'
 import { useHistory } from 'react-router-dom'
 import Header from 'components/Header'
+import axios from 'axios'
 
 export default function CreateRoom() {
 	const history = useHistory()
@@ -19,7 +20,7 @@ export default function CreateRoom() {
 			title: '',
 			topic: '',
 		},
-		onSubmit: (values) => console.log(values),
+		onSubmit: (values) => handleSubmit(values),
 	})
 
 	useEffect(() => {
@@ -29,22 +30,42 @@ export default function CreateRoom() {
 		})
 	})
 
-	const handleClick = () => {
-		socket.emit(
-			'CREATE_ROOM',
-			{
-				user: authState.user,
-				room: {
-					roomName: formik.values.title,
-					roomTopic: formik.values.topic,
-				},
-			},
-			(response) => {
-				if (response) {
-					console.log('response', response)
-				}
-			},
-		)
+	const handleSubmit = async (values) => {
+		try {
+			await axios
+				.post(
+					'http://localhost:5000/room/create',
+					{
+						user: authState.user,
+						roomName: values.title,
+						roomTopic: values.topic,
+					},
+					{
+						withCredentials: true,
+					},
+				)
+				.then((res) => {
+					console.log('ROOM ID ->>> ', res.data.room.roomID)
+					socket.emit(
+						'JOIN_ROOM',
+						{
+							clientUser: authState.user,
+							roomID: res?.data?.room?.roomID,
+						},
+						(error) => {
+							console.log(error)
+						},
+					)
+					history.push(`/room/${res.data?.room?.roomID}`)
+				})
+
+				.catch((error) => {
+					throw new Error(error)
+				})
+		} catch (error) {
+			console.log('Something went wrong', error)
+		}
+
 		history.push('/home')
 	}
 
@@ -114,7 +135,6 @@ export default function CreateRoom() {
 										<button
 											type="submit"
 											className="inline-flex justify-center px-4 py-2 ml-3 text-sm font-medium text-white border border-transparent rounded-md shadow-sm bg-cyan-600 hover:bg-cyan-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-cyan-500"
-											onClick={handleClick}
 										>
 											Create a room
 										</button>

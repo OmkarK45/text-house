@@ -1,6 +1,7 @@
 import axios from 'axios'
 import { Button } from 'components/ui/Button/Button'
 import FormInput from 'components/ui/Form/FormInput'
+import { useAuth } from 'context/UserContext'
 import { useFormik } from 'formik'
 import { useState } from 'react'
 import toast from 'react-hot-toast'
@@ -11,6 +12,9 @@ import AuthContainer from './AuthContainer'
 export default function Register() {
 	const [isLoading, setIsLoading] = useState(false)
 	const history = useHistory()
+
+	const { setAuthState } = useAuth()
+
 	const SignUpSchema = Yup.object().shape({
 		username: Yup.string()
 			.min(2, 'Username should be atleast 2 characters long.')
@@ -39,14 +43,22 @@ export default function Register() {
 		setIsLoading(true)
 		try {
 			await axios
-				.post('http://localhost:5000/api/auth/register', {
-					username,
-					email,
-					password,
-				})
+				.post(
+					'http://localhost:5000/api/auth/register',
+					{
+						username,
+						email,
+						password,
+					},
+					{
+						withCredentials: true,
+					},
+				)
 				.then((res) => {
+					console.log(res.status)
 					if (res.status === 200) {
 						setIsLoading(false)
+						setAuthState(res.data)
 						history.push('/home')
 					}
 					toast.success('Welcome to texthouse!')
