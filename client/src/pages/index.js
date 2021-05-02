@@ -1,3 +1,6 @@
 export { default as Home } from './Home'
 export { default as FeedPage } from './FeedPage'
 export { default as RoomPage } from './RoomPage'
+export { default as CreateRoom } from './CreateRoomPage'
+export { default as JoinRoom } from './JoinRoomPage'
+export { default as PageNotFound } from './PageNotFound'

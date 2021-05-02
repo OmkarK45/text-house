@@ -9,6 +9,34 @@ import { useSocket } from 'context/SocketContext'
 import { useMembers } from 'context/MemberContext'
 import Test from 'components/Test'
 import ChatContainer from 'components/Chat/ChatContainer'
+import ProfileCard from './../components/ProfileCard'
+  
+  const people = [
+	{
+		name: 'Leonard Krasner',
+		handle: 'leonardkrasner',
+		imageUrl:
+			'https://images.unsplash.com/photo-1519345182560-3f2917c472ef?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80',
+	},
+	{
+		name: 'Floyd Miles',
+		handle: 'floydmiles',
+		imageUrl:
+			'https://images.unsplash.com/photo-1463453091185-61582044d556?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80',
+	},
+	{
+		name: 'Emily Selman',
+		handle: 'emilyselman',
+		imageUrl:
+			'https://images.unsplash.com/photo-1502685104226-ee32379fefbe?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80',
+	},
+	{
+		name: 'Kristin Watson',
+		handle: 'kristinwatson',
+		imageUrl:
+			'https://images.unsplash.com/photo-1500917293891-ef795e70e1f6?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80',
+	},
+]
 
 export default function RoomPage() {
 	const { roomID } = useParams()
@@ -79,13 +107,13 @@ export default function RoomPage() {
 													to="/room/create"
 													className="inline-flex items-center justify-center px-4 py-2 text-sm font-medium text-white border border-transparent rounded-md shadow-sm bg-cyan-600 hover:bg-cyan-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-cyan-500 xl:w-full"
 												>
-													Create Room
+													Request to speak
 												</Link>
 												<Link
 													to="/room/join"
 													className="inline-flex items-center justify-center px-4 py-2 mt-3 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-cyan-500 sm:mt-0 sm:ml-3 xl:ml-0 xl:mt-3 xl:w-full"
 												>
-													Join Room
+													End the room
 												</Link>
 											</div>
 										</div>
@@ -100,6 +128,29 @@ export default function RoomPage() {
 													Moderators
 												</span>
 											</div>
+											{/* List of mods */}
+											<div className="flow-root mt-6">
+												<ul className="-my-5 divide-y divide-gray-200">
+													{people.map((person) => (
+														<li key={person.handle} className="py-4">
+															<ProfileCard
+																profilePicture={person.imageUrl}
+																name={person.name}
+																username={person.handle}
+															/>
+														</li>
+													))}
+												</ul>
+											</div>
+											<div className="mt-6">
+												<a
+													href="#"
+													className="flex items-center justify-center w-full px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md shadow-sm hover:bg-gray-50"
+												>
+													View all
+												</a>
+											</div>
+
 											<div className="flex items-center space-x-2">
 												<HiCollection
 													className="w-5 h-5 text-gray-400"
@@ -108,6 +159,27 @@ export default function RoomPage() {
 												<span className="text-sm font-medium text-gray-500">
 													Watchers
 												</span>
+											</div>
+											<div className="flow-root mt-6">
+												<ul className="-my-5 divide-y divide-gray-200">
+													{people.map((person) => (
+														<li key={person.handle} className="py-4">
+															<ProfileCard
+																profilePicture={person.imageUrl}
+																name={person.name}
+																username={person.handle}
+															/>
+														</li>
+													))}
+												</ul>
+											</div>
+											<div className="mt-6">
+												<a
+													href="#"
+													className="flex items-center justify-center w-full px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md shadow-sm hover:bg-gray-50"
+												>
+													View all
+												</a>
 											</div>
 										</div>
 									</div>
@@ -137,6 +209,7 @@ export default function RoomPage() {
 									</Link>
 								</div>
 							</div>
+							{/* Code for the chat message boxes goes here */}
 							<ChatContainer />
 							{/* {JSON.stringify(room)} */}
 							{/* <Test /> */}

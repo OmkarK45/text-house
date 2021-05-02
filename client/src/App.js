@@ -2,11 +2,9 @@ import Login from './components/Auth/Login'
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom'
 import Register from 'components/Auth/Register'
 import PrivateRoute from 'components/PrivateRoute'
-import { FeedPage, Home, RoomPage } from 'pages/index'
+import { FeedPage, Home, RoomPage, JoinRoom, CreateRoom, PageNotFound } from 'pages/index'
 import { Toaster } from 'react-hot-toast'
 import Test from 'components/Test'
-import CreateRoom from 'pages/CreateRoomPage'
-import JoinRoom from 'pages/JoinRoomPage'
 
 export default function App() {
 	return (
@@ -46,6 +44,9 @@ export default function App() {
 					<PrivateRoute exact path="/room/:roomID">
 						<RoomPage />
 					</PrivateRoute>
+					<Route>
+						<PageNotFound />
+					</Route>
 				</Switch>
 			</Router>
 		</>
