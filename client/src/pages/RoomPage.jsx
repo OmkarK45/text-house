@@ -40,15 +40,15 @@ export default function RoomPage() {
 	return (
 		<>
 			{/* Background color split screen for large screens */}
-			<div className="relative flex flex-col min-h-screen bg-white border border-red-500">
+			<div className="relative flex flex-col max-h-screen overflow-hidden bg-white border border-red-500">
 				<Header />
 
 				{/* 3 column wrapper */}
 				<div className="flex-grow w-full mx-auto mt-2 max-w-7xl xl:px-8 lg:flex">
 					{/* Left sidebar & main wrapper */}
-					<div className="flex-1 min-w-0 bg-white xl:flex">
+					<div className="flex-1 min-w-0 bg-white border border-black xl:flex">
 						{/* Account profile */}
-						<div className="bg-white xl:flex-shrink-0 xl:w-64 xl:border-r xl:border-gray-200">
+						<div className="max-h-screen bg-white xl:flex-shrink-0 xl:w-64 xl:border-r xl:border-gray-200">
 							<div className="py-6 pl-4 pr-6 sm:pl-6 lg:pl-8 xl:pl-0">
 								<div className="flex items-center justify-between">
 									<div className="flex-1 space-y-8">
@@ -115,7 +115,7 @@ export default function RoomPage() {
 							</div>
 						</div>
 
-						<div className="relative flex flex-col h-full bg-white border border-gray-200 lg:min-w-0 lg:flex-1">
+						<div className="relative flex flex-col overflow-hidden bg-white border border-gray-200 h-3/4 lg:min-w-0 lg:flex-1">
 							<div className="pt-4 pb-4 pl-4 pr-6 border-t border-b border-gray-200 sm:pl-6 lg:pl-8 xl:pl-6 xl:pt-6 xl:border-t-0">
 								<div className="flex items-center">
 									<div className="flex flex-col">

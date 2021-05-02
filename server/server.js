@@ -12,6 +12,7 @@ const io = require('socket.io')(http)
 const { addUser, getUser, deleteUser, getUsers } = require('./controllers/users')
 const User = require('./models/User')
 const Room = require('./models/Room')
+const Message = require('./models/Message')
 const { checkAuth } = require('./middlewares/checkAuth')
 
 app.use(cors(corsOptions))
@@ -85,7 +86,34 @@ io.on('connection', (socket) => {
 
 	socket.on('sendMessage', (message) => {
 		const user = getUser(socket.id)
-		io.in(user.roomID).emit('message', { user: user.username, text: message })
+		console.log('USER AND HIS MESSAGE AND ROOM ID ', user, message)
+		// message : {id: socket id , userID : object id ,roomID}
+		async function findRoom() {
+			const currentRoom = await Room.findOne({
+				roomID: user.roomID,
+			})
+
+			const messageToBeSaved = new Message({
+				room: currentRoom._id,
+				user: user.userID,
+				body: message.body,
+			})
+			await messageToBeSaved.save()
+			currentRoom.messages.push(messageToBeSaved)
+			await currentRoom.save((err) => {
+				if (err) {
+					console.log(err)
+					return
+				}
+			})
+			console.log('CURRENT ROOM ->>>>>>>>>>>>>>>', currentRoom)
+		}
+		findRoom()
+		io.in(user.roomID).emit('message', {
+			by: user.userID,
+			body: message,
+			author: user.username,
+		})
 	})
 
 	socket.on('disconnect', () => {

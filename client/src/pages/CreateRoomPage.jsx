@@ -65,8 +65,6 @@ export default function CreateRoom() {
 		} catch (error) {
 			console.log('Something went wrong', error)
 		}
-
-		history.push('/home')
 	}
 
 	return (
