@@ -45,17 +45,20 @@ export default function CreateRoom() {
 					},
 				)
 				.then((res) => {
+					console.log('ROOM ID ->>> ', res.data.room.roomID)
 					socket.emit(
 						'JOIN_ROOM',
 						{
 							clientUser: authState.user,
-							roomID: res.data.roomID,
+							roomID: res?.data?.room?.roomID,
 						},
 						(error) => {
 							console.log(error)
 						},
 					)
+					history.push(`/room/${res.data?.room?.roomID}`)
 				})
+
 				.catch((error) => {
 					throw new Error(error)
 				})

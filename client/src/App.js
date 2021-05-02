@@ -24,7 +24,6 @@ export default function App() {
 				}}
 			/>
 			<Router>
-				<Test />
 				<Switch>
 					<Route exact path="/">
 						<Home />
@@ -44,7 +43,7 @@ export default function App() {
 					<PrivateRoute exact path="/room/join">
 						<JoinRoom />
 					</PrivateRoute>
-					<PrivateRoute exact path="/room/:id">
+					<PrivateRoute exact path="/room/:roomID">
 						<RoomPage />
 					</PrivateRoute>
 				</Switch>

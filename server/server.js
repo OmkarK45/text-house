@@ -51,9 +51,26 @@ app.post('/room/create', checkAuth, async (req, res) => {
 	}
 })
 
+app.get('/room/:roomID', checkAuth, async (req, res) => {
+	const { roomID } = req.params
+	try {
+		const foundRoom = await Room.findOne({ roomID })
+		res.json({
+			foundRoom,
+		})
+		console.log('FOUND ROOM', foundRoom)
+	} catch (error) {
+		res.status(500).json({
+			msg: 'Something went wrong',
+			error,
+		})
+	}
+})
+
 io.on('connection', (socket) => {
 	socket.on('JOIN_ROOM', async ({ clientUser, roomID }, callback) => {
 		const { user, error } = await addUser(socket.id, clientUser.userID, roomID)
+		console.log('ERROR', user)
 		if (error) return callback(error)
 		socket.join(user.roomID)
 		const dbUser = await User.findOne({ _id: clientUser.userID })
@@ -68,7 +85,7 @@ io.on('connection', (socket) => {
 
 	socket.on('sendMessage', (message) => {
 		const user = getUser(socket.id)
-		io.in(user.room).emit('message', { user: user.name, text: message })
+		io.in(user.roomID).emit('message', { user: user.username, text: message })
 	})
 
 	socket.on('disconnect', () => {
