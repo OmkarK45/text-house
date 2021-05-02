@@ -23,6 +23,7 @@ export default function Test() {
 		socket.emit('sendMessage', message, () => setMessage(''))
 		setMessage('')
 	}
+	console.log('MESSAGES IN ROOM', messages)
 	return (
 		<div>
 			{messages.length > 0 &&

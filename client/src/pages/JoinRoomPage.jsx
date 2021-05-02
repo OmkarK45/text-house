@@ -1,16 +1,18 @@
 import Header from 'components/Header'
 import FormInput from 'components/ui/Form/FormInput'
+import { useMembers } from 'context/MemberContext'
 import { useSocket } from 'context/SocketContext'
 import { useAuth } from 'context/UserContext'
 import { useFormik } from 'formik'
-import { useEffect, useState } from 'react'
+import { useEffect } from 'react'
 import toast from 'react-hot-toast'
+import { useHistory } from 'react-router'
 
 export default function JoinRoom() {
 	const socket = useSocket()
 	const { authState } = useAuth()
-	// temp
-	const [users, setUsers] = useState([])
+	const history = useHistory()
+	const { members, setMembers } = useMembers()
 
 	const formik = useFormik({
 		initialValues: {
@@ -20,20 +22,27 @@ export default function JoinRoom() {
 	})
 
 	useEffect(() => {
-		socket.on('JOINED_ROOM', (users) => {
-			setUsers((oldUsers) => [...oldUsers, users])
-			console.log(users)
-			return toast.success('Someone joined the room')
+		socket.on('NOTIFICATION', (notification) => {
+			console.log(notification)
+			toast.success(notification.description)
 		})
 	}, [socket])
 
-	function handleSubmit() {
+	useEffect(() => {
+		socket.on('USERS', (members) => {
+			history.push(`/room/${formik.values.roomID}`)
+			setMembers((oldMembers) => [...oldMembers, members])
+		})
+	})
+
+	function handleSubmit(values) {
 		socket.emit(
 			'JOIN_ROOM',
-			{ user: authState.user, roomID: formik.values.roomID },
+			{ clientUser: authState.user, roomID: values.roomID },
 			(response) => {
 				if (response) {
 					console.log('response', response)
+					localStorage.setItem('roomID', response.roomID)
 				}
 			},
 		)
@@ -85,8 +94,8 @@ export default function JoinRoom() {
 					</div>
 				</div>
 			</div>
-			{users &&
-				users.map((user, index) => {
+			{members &&
+				members.map((user, index) => {
 					return <li key={index}>{JSON.stringify(user)}</li>
 				})}
 		</>
