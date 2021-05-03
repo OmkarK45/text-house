@@ -1,4 +1,8 @@
-    server                                  client
+This project uses my own authentication boilerplate.. You can check it out here. https://github.com/OmkarK45/express-auth-boilerplate
+
+Leave a star and use it in your own projects !
+
+server                                  client
   - on.'CREATE_ROOM'                       - Fire create room after user submits new room form 
     create room and save ID in DB
     with creator as ADMIN
